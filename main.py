@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
 import os
+import time
+from PIL import Image
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from imagegen import generate_image
@@ -15,6 +17,8 @@ profile_name = os.getenv("PROFILE")
 hostname = "0.0.0.0"
 port = 8000
 
+lastGenerated = 0
+
 # Create a Webserver
 class MyServer(BaseHTTPRequestHandler):
     # When receiving a GET request to redstone.png, get the collection amount and generate the image.
@@ -24,14 +28,24 @@ class MyServer(BaseHTTPRequestHandler):
         params = { p.split("=")[0]: p.split("=")[1] for p in params } if len(params) > 0 else {}
 
         if path == "/redstone.png":
-            collection = get_collection(api_key, uuid, profile_name)
-            image = generate_image(collection, params["rank"] if "rank" in params else 0)
 
-            # Send the image
+            # Send some image immediately
+            cached_image = Image.open("image.png")
             self.send_response(200)
             self.send_header("Content-type", "image/png")
             self.end_headers()
-            image.save(self.wfile, "PNG")
+            cached_image.save(self.wfile, "PNG")
+
+            # If it's been more than 5 minutes since the last image generation, generate a new one
+            if time.time() - lastGenerated > 300:
+
+                # Generate and prepare a new image
+                collection = get_collection(api_key, uuid, profile_name)
+                new_image = generate_image(collection, params["rank"] if "rank" in params else 0)
+                new_image.save("image.png")
+
+                # Set the last generated time
+                lastGenerated = time.time()
 
         # Otherwise, send a 404
         else:
