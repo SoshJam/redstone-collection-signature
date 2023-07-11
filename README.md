@@ -3,4 +3,4 @@
 This is a simple app designed to query the Hypixel API and automatically update an image
 with the collection amount.
 
-(!https://soshjam.pythonanywhere.com/redstone.png?rank=7)
+![The hosted image](https://redstone-collection-signature.onrender.com/redstone.png?rank=7)
