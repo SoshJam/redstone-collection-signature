@@ -23,11 +23,16 @@ lastGenerated = 0
 class MyServer(BaseHTTPRequestHandler):
     # When receiving a GET request to redstone.png, get the collection amount and generate the image.
     def do_GET(self):
+        global lastGenerated
+
         path = self.path.split("?")[0]
         params = self.path.split("?")[1].split("&") if len(self.path.split("?")) > 1 else []
         params = { p.split("=")[0]: p.split("=")[1] for p in params } if len(params) > 0 else {}
 
         if path == "/redstone.png":
+
+            # Debug
+            print(f"Request received. It has been {time.time() - lastGenerated} seconds since the last image generation.")
 
             # Send some image immediately
             cached_image = Image.open("image.png")
