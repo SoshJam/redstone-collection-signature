@@ -8,11 +8,11 @@ from getcollection import get_collection
 # Load environment variables
 load_dotenv()
 
-api_key = os.getenv("TEMP_API_KEY")
+api_key = os.getenv("HYPIXEL_API_KEY")
 uuid = os.getenv("PLAYER_UUID")
 profile_name = os.getenv("PROFILE")
 
-hostname = "localhost"
+hostname = "0.0.0.0"
 port = 8000
 
 # Create a Webserver
